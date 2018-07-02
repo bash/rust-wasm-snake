@@ -1,0 +1,13 @@
+{
+  "name": "rust-wasm-snake",
+  "version": "1.0.0",
+  "author": "Ruben Schmidmeister <ruben.schmidmeister@icloud.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "ts-loader": "^4.4.2",
+    "typescript": "^2.9.2",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.10"
+  }
+}

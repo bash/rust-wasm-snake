@@ -1,0 +1,10 @@
+[package]
+authors = ["Ruben Schmidmeister <ruben.schmidmeister@icloud.com>"]
+name = "rust-wasm-snake"
+version = "0.1.0"
+
+[dependencies]
+wasm-bindgen = "0.2"
+
+[lib]
+crate-type = ["cdylib"]
