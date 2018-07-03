@@ -5,12 +5,6 @@ use wasm_bindgen::prelude::*;
 
 const TICK: f64 = 17.0;
 
-#[derive(Debug)]
-pub struct GameState {
-    dimensions: Dimensions,
-    snake: Coordinate,
-    snake_direction: Direction,
-}
 
 #[derive(Debug)]
 pub struct Dimensions {
@@ -43,55 +37,81 @@ extern "C" {
     #[wasm_bindgen(method, js_name = clearRect)]
     pub fn clear_rect(this: &CanvasRenderingContext2D, x: u32, y: u32, width: u32, height: u32);
 
-    // #[wasm_bindgen(js_namespace = console)]
-    // fn log(s: &str);
+    #[wasm_bindgen(js_namespace = console)]
+    fn log(s: &str);
 
     #[wasm_bindgen(js_namespace = Date)]
     fn now() -> f64;
 }
 
 #[wasm_bindgen]
+#[derive(Debug)]
+pub enum KeyboardButton {
+    Up,
+    Down,
+    Left,
+    Right,
+    Escape,
+}
+
+#[wasm_bindgen]
 pub struct Game {
-    state: GameState,
+    dimensions: Dimensions,
+    snake: Coordinate,
+    snake_direction: Direction,
+    ctx: CanvasRenderingContext2D,
 }
 
 #[wasm_bindgen]
 impl Game {
-    pub fn new(width: u32, height: u32) -> Game {
+    pub fn new(width: u32, height: u32, ctx: CanvasRenderingContext2D) -> Game {
         Game {
-            state: GameState {
-                dimensions: Dimensions { width, height },
-                snake: Coordinate { x: 0, y: 0 },
-                snake_direction: Direction::East,
-            },
+            dimensions: Dimensions { width, height },
+            snake: Coordinate { x: 0, y: 0 },
+            snake_direction: Direction::East,
+            ctx,
         }
     }
 
-    pub fn tick(&mut self, ctx: &CanvasRenderingContext2D) -> f64 {
+    pub fn on_key_press(&mut self, button: KeyboardButton) {
+        match button {
+            KeyboardButton::Left => {
+                self.snake_direction = Direction::West;
+            }
+            KeyboardButton::Right => {
+                self.snake_direction = Direction::East;
+            }
+            _ => {
+                log(&format!("Unsupported keyboard input {:?}", button));
+            }
+        }
+    }
+
+    pub fn tick(&mut self) -> f64 {
         let tick_begin = now();
-        let state = &mut self.state;
 
-        ctx.clear_rect(0, 0, state.dimensions.width, state.dimensions.height);
-        ctx.set_fill_style("rgb(200, 200, 200)");
-        ctx.fill_rect(state.snake.x, state.snake.y + 100, 30, 30);
+        self.ctx
+            .clear_rect(0, 0, self.dimensions.width, self.dimensions.height);
+        self.ctx.set_fill_style("rgb(200, 200, 200)");
+        self.ctx.fill_rect(self.snake.x, self.snake.y + 100, 30, 30);
 
-        // log(&format!("{:#?}", state));
+        // log(&format!("{:#?}", self.snake.x));
 
-        match state.snake_direction {
+        if self.snake.x + 30 >= self.dimensions.width {
+            self.snake_direction = Direction::West;
+        }
+
+        if self.snake.x <= 0 {
+            self.snake_direction = Direction::East;
+        }
+
+        match self.snake_direction {
             Direction::East => {
-                state.snake.x += 5;
+                self.snake.x += 5;
             }
             Direction::West => {
-                state.snake.x -= 5;
+                self.snake.x -= 5;
             }
-        }
-
-        if state.snake.x + 30 >= state.dimensions.width {
-            state.snake_direction = Direction::West;
-        }
-
-        if state.snake.x <= 0 {
-            state.snake_direction = Direction::East;
         }
 
         let delta = now() - tick_begin;
