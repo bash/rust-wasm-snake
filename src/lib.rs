@@ -8,7 +8,6 @@ pub(crate) mod board;
 pub(crate) mod entity;
 pub(crate) mod game;
 
-
 #[derive(Debug)]
 pub struct Dimensions {
     width: u32,
