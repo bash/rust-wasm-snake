@@ -1,9 +1,12 @@
-#![feature(proc_macro, wasm_custom_section, wasm_import_module)]
+#![feature(proc_macro, wasm_custom_section, wasm_import_module, crate_in_paths)]
 
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
 const TICK: f64 = 17.0;
+pub(crate) mod board;
+pub(crate) mod entity;
+pub(crate) mod game;
 
 
 #[derive(Debug)]
