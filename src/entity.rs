@@ -1,5 +1,23 @@
 use std::collections::VecDeque;
 
+pub(crate) trait Object {
+    fn position(&self) -> Coordinate;
+
+    fn size(&self) -> Size;
+
+    fn edge(&self, direction: Direction) -> u64 {
+        let position = self.position();
+        let size = self.size();
+
+        match direction {
+            Direction::North => position.1,
+            Direction::East => position.0 + size.0,
+            Direction::South => position.1 + size.1,
+            Direction::West => position.0,
+        }
+    }
+}
+
 #[derive(Debug, Copy, Clone)]
 pub(crate) enum Direction {
     North,
@@ -58,12 +76,14 @@ impl Segment {
     pub(crate) fn new(position: Coordinate, size: Size) -> Self {
         Segment { position, size }
     }
+}
 
-    pub(crate) fn position(&self) -> Coordinate {
+impl Object for Segment {
+    fn position(&self) -> Coordinate {
         self.position
     }
 
-    pub(crate) fn size(&self) -> Size {
+    fn size(&self) -> Size {
         self.size
     }
 }
@@ -92,5 +112,65 @@ impl SnakeBuilder {
             segments,
             consumed_score: 0,
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    struct ObjectMock {
+        size: Size,
+        position: Coordinate,
+    }
+
+    impl Object for ObjectMock {
+        fn size(&self) -> Size {
+            self.size
+        }
+
+        fn position(&self) -> Coordinate {
+            self.position
+        }
+    }
+
+    #[test]
+    fn test_object_edge_north() {
+        let object = ObjectMock {
+            size: Size(2, 2),
+            position: Coordinate(16, 40),
+        };
+
+        assert_eq!(40, object.edge(Direction::North));
+    }
+
+    #[test]
+    fn test_object_edge_east() {
+        let object = ObjectMock {
+            size: Size(2, 2),
+            position: Coordinate(16, 40),
+        };
+
+        assert_eq!(18, object.edge(Direction::East));
+    }
+
+    #[test]
+    fn test_object_edge_south() {
+        let object = ObjectMock {
+            size: Size(2, 2),
+            position: Coordinate(16, 40),
+        };
+
+        assert_eq!(42, object.edge(Direction::South));
+    }
+
+    #[test]
+    fn test_object_edge_west() {
+        let object = ObjectMock {
+            size: Size(2, 2),
+            position: Coordinate(16, 40),
+        };
+
+        assert_eq!(16, object.edge(Direction::West));
     }
 }

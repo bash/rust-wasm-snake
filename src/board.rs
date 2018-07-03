@@ -1,4 +1,4 @@
-use crate::entity::{Direction, Food, Obstacle, Size, Snake};
+use crate::entity::{Direction, Food, Object, Obstacle, Size, Snake};
 
 #[derive(Debug)]
 pub(crate) struct Board {
@@ -18,10 +18,15 @@ impl Board {
     fn snake_touches_edge(&self) -> bool {
         match self.snake.head() {
             None => false,
-            Some(segment) => match self.snake.direction() {
-                Direction::East => segment.position().0 + segment.size().0 >= self.size.0,
-                _ => unimplemented!(),
-            },
+            Some(segment) => {
+                let direction = self.snake.direction();
+                let edge = segment.edge(direction);
+
+                match direction {
+                    Direction::East => edge >= self.size.0,
+                    _ => unimplemented!(),
+                }
+            }
         }
     }
 }
