@@ -23,8 +23,10 @@ impl Board {
                 let edge = segment.edge(direction);
 
                 match direction {
+                    Direction::North => edge <= 0,
                     Direction::East => edge >= self.size.0,
-                    _ => unimplemented!(),
+                    Direction::South => edge >= self.size.1,
+                    Direction::West => edge <= 0,
                 }
             }
         }
@@ -54,10 +56,46 @@ mod test {
     use crate::entity::{Coordinate, Direction, Segment, Size, SnakeBuilder};
 
     #[test]
+    fn test_snake_touches_edge_north() {
+        let snake = SnakeBuilder::new(Direction::North)
+            .with_segment(Segment::new(Coordinate(5, 0), Size(4, 1)))
+            .with_segment(Segment::new(Coordinate(5, 1), Size(4, 1)))
+            .build();
+
+        let board = BoardBuilder::new(Size(10, 10), snake).build();
+
+        assert_eq!(true, board.snake_touches_edge());
+    }
+
+    #[test]
     fn test_snake_touches_edge_east() {
         let snake = SnakeBuilder::new(Direction::East)
             .with_segment(Segment::new(Coordinate(9, 0), Size(1, 4)))
             .with_segment(Segment::new(Coordinate(8, 0), Size(1, 4)))
+            .build();
+
+        let board = BoardBuilder::new(Size(10, 10), snake).build();
+
+        assert_eq!(true, board.snake_touches_edge());
+    }
+
+    #[test]
+    fn test_snake_touches_edge_south() {
+        let snake = SnakeBuilder::new(Direction::South)
+            .with_segment(Segment::new(Coordinate(5, 8), Size(1, 4)))
+            .with_segment(Segment::new(Coordinate(5, 9), Size(1, 4)))
+            .build();
+
+        let board = BoardBuilder::new(Size(10, 10), snake).build();
+
+        assert_eq!(true, board.snake_touches_edge());
+    }
+
+    #[test]
+    fn test_snake_touches_edge_west() {
+        let snake = SnakeBuilder::new(Direction::West)
+            .with_segment(Segment::new(Coordinate(0, 3), Size(4, 1)))
+            .with_segment(Segment::new(Coordinate(1, 3), Size(4, 1)))
             .build();
 
         let board = BoardBuilder::new(Size(10, 10), snake).build();

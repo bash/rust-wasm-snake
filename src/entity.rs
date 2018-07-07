@@ -1,6 +1,7 @@
 use std::collections::VecDeque;
 
 pub(crate) trait Object {
+    /// The position of this object's north-west corner
     fn position(&self) -> Coordinate;
 
     fn size(&self) -> Size;
@@ -27,9 +28,11 @@ pub(crate) enum Direction {
 }
 
 #[derive(Debug, Copy, Clone)]
+/// A position as (x, y) components
 pub(crate) struct Coordinate(pub u64, pub u64);
 
 #[derive(Debug, Copy, Clone)]
+/// A size given as (x, y) or (width, height) components
 pub(crate) struct Size(pub u64, pub u64);
 
 #[derive(Debug)]
