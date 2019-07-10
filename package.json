@@ -5,9 +5,9 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "ts-loader": "^4.4.2",
-    "typescript": "^2.9.2",
-    "webpack": "^4.0.1",
-    "webpack-cli": "^2.0.10"
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3",
+    "webpack": "^4.35.3",
+    "webpack-cli": "^3.3.5"
   }
 }

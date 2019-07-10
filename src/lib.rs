@@ -1,4 +1,4 @@
-#![feature(proc_macro, wasm_custom_section, wasm_import_module, crate_in_paths)]
+#![feature(proc_macro, crate_in_paths)]
 
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
